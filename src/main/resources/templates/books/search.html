@@ -11,7 +11,7 @@
 <body>
 <div class="frame">
 
-    <form th:method="POST" th:action="@{library/books/search}" onsubmit="return validateForm()">
+    <form th:method="POST" th:action="@{/library/books/search}" onsubmit="return validateForm()">
         <label for="titleFragment">Enter title: </label>
         <input th:type="text" id="titleFragment" th:name="titleFragment" />
         <br/>
@@ -51,20 +51,8 @@
         </div>
     </div>
 
-<script>
-    function validateForm() {
-        var titleFragment = document.getElementById("titleFragment").value.trim();
-        var errorMessage = document.getElementById("errorMessage");
-
-        if (titleFragment === '') {
-            errorMessage.textContent = "Enter title";
-            return false;
-        }
-
-        errorMessage.textContent = "";  // Clear the error message if it was previously displayed
-        return true;
-    }
-</script>
+    <!-- Include the external JavaScript file -->
+    <script th:src="@{/javascript/book_search_validation.js}"></script>
 </div>
 </body>
 </html>
