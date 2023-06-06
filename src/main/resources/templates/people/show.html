@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/library.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/people.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/frame.css}"/>
+    <title>Reader page</title>
+</head>
+<body>
+<div class="frame">
+    <p th:text="${person.getFullName() + ', ' + person.getBirthYear() + ', ' + person.getEmail()} ">VALUE</p>
+
+    <!-- Check if personBooks is null -->
+    <div th:if="${personBooks.isEmpty()}">The reader did not take any book</div>
+
+    <div th:if="${!personBooks.isEmpty()}">
+        <hr/>
+        <p><b>Books:</b></p>
+        <div th:each="book : ${personBooks}">
+            <a th:href="@{/library/books/{id}(id=${book.getId()})}"
+               th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}"
+               th:style="${book.isExpired()} ? 'color: red' : 'color: blue'">user</a>
+        </div>
+    </div>
+    <br>
+    <hr/>
+    <form th:method="GET" th:action="@{/library/people/{id}/edit(id=${person.getId()})}">
+        <input type="submit" class="button" value="Edit"/>
+        </form>
+        <br/>
+    <form th:method="DELETE" th:action="@{/library/people/{id}(id=${person.getId()})}">
+        <input type="submit" class="button" value="Delete"/>
+    </form>
+    <hr/>
+    <div class="btn-group">
+        <div class="button">
+            <a th:href="@{/library/people}">All readers</a>
+        </div>
+        <div class="button">
+            <a th:href="@{/library/books}">All books</a>
+        </div>
+        <div class="button">
+            <a th:href="@{/library}">To main page</a>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

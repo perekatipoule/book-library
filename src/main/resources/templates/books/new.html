@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/library.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/books.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/frame.css}"/>
+    <title>New</title>
+</head>
+<body>
+<div class="frame">
+    <form th:method="POST" th:action="@{/library/books}" th:object="${book}">
+        <label for="title">Enter title: </label>
+        <input type="text" th:field="*{title}" id="title"/>
+        <div style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Name error</div>
+        <br/>
+        <label for="author">Enter author: </label>
+        <input type="text" th:field="*{author}" id="author"/>
+        <div style="color:red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Name error</div>
+        <br/>
+        <label for="year">Enter publication year: </label>
+        <input type="text" th:field="*{year}" id="year"/>
+        <div style="color:red" th:if="${#fields.hasErrors('year')}" th:errors="*{year}">Name error</div>
+        <br/>
+        <input type="submit" class="button" value="Add"/>
+    </form>
+    <hr/>
+    <div class="btn-group">
+        <div class="button">
+            <a th:href="@{/library/people}">All readers</a>
+        </div>
+        <div class="button">
+            <a th:href="@{/library/books}">All books</a>
+        </div>
+        <div class="button">
+            <a th:href="@{/library}">To main page</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

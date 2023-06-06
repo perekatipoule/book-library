@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/library.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/table-left.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/people.css}"/>
+    <title>Index</title>
+</head>
+<body>
+<div class="main">
+    <div class="list" th:each="person : ${people}">
+        <a th:href="@{/library/people/{id}(id=${person.getId()})}"
+           th:text="${person.getFullName() + ', ' + person.getBirthYear()}">user</a>
+    </div>
+    <div class="list">
+        <a th:href="@{/library/people/new}"><b>Add reader</b></a>
+    </div>
+    <div class="list">
+        <a th:href="@{/library}"><b>To main page</b></a>
+    </div>
+</div>
+</body>
+</html>

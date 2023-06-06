@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/library.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/table-left.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/books.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/frame.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/queries.css}"/>
+    <title>Index</title>
+</head>
+<body>
+<div class="main">
+    <div class="list" th:each="book : ${books}">
+        <a th:href="@{/library/books/{id}(id=${book.getId()})}"
+         th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}">user</a>
+    </div>
+    <div class="list" >
+        <a th:href="@{/library/books/new}"><b>Add book</b></a>
+    </div>
+    <div class="list">
+        <a th:href="@{/library/books/search}"><b> Find book</b></a>
+    </div>
+    <div class="list">
+        <a th:href="@{/library}">To main page</a>
+    </div>
+
+    <div class="break"></div>
+    <div class="frame queries">
+        <form th:method="GET" th:action="@{/library/books}" th:object="${form}">
+            <label for="page">Page number:</label>
+            <input type="text" th:field="*{page}" id="page"/>
+            <div style="color:red" th:if="${#fields.hasErrors('page')}" th:errors="*{page}">Name error</div>
+            <br/>
+            <label for="booksPerPage">Number of books per page:</label>
+            <input type="text" th:field="*{booksPerPage}" id="booksPerPage"/>
+            <div style="color:red" th:if="${#fields.hasErrors('booksPerPage')}" th:errors="*{booksPerPage}">Name error</div>
+            <br/>
+            <label for="sort_by_year">Sort by year of publication:</label>
+            <select id="sort_by_year" th:field="*{sortByYear}">
+                <option th:value="false">--</option>
+                <option th:value="true">yes</option>
+                <option th:value="false">no</option>
+            </select>
+            <div class="button-group">
+                <input type="submit" class="button" value="Apply" />
+                <a style="text-decoration: none" th:href="@{/library/books}" class="button">Reset</a>
+            </div>
+        </form>
+        <hr/>
+    </div>
+
+
+</div>
+</body>
+</html>

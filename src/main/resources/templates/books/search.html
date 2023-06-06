@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/library.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/books.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/frame.css}"/>
+    <title>Search</title>
+</head>
+<body>
+<div class="frame">
+
+    <form th:method="POST" th:action="@{library/books/search}" onsubmit="return validateForm()">
+        <label for="titleFragment">Enter title: </label>
+        <input th:type="text" id="titleFragment" th:name="titleFragment" />
+        <br/>
+        <input type="submit" class="button" value="Find" />
+        <div id="errorMessage" style="color: red;"></div>
+    </form>
+    <div th:if="${searchedBooks}">
+        <div th:if="${searchedBooks.isEmpty()}">
+            <br>
+            <p>No book found</p>
+            <br>
+        </div>
+        <div th:unless="${searchedBooks.isEmpty()}">
+            <div th:each="book : ${searchedBooks}">
+                <a th:href="@{/library/books/{id}(id=${book.id})}"
+                   th:text="${book.title + ', ' + book.author + ', ' + book.year}">user</a>
+                <div th:if="${book.reader == null}">
+                    <p>Book is free</p>
+                </div>
+
+                <div th:unless="${book.reader == null}">
+                    <p th:text="${'Book was taken by ' + book.reader.fullName}">user</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="btn-group">
+        <div class="button">
+            <a th:href="@{/library/people}">All readers</a>
+        </div>
+        <div class="button">
+            <a th:href="@{/library/books}">All books</a>
+        </div>
+        <div class="button">
+            <a th:href="@{/library}">To main page</a>
+        </div>
+    </div>
+
+<script>
+    function validateForm() {
+        var titleFragment = document.getElementById("titleFragment").value.trim();
+        var errorMessage = document.getElementById("errorMessage");
+
+        if (titleFragment === '') {
+            errorMessage.textContent = "Enter title";
+            return false;
+        }
+
+        errorMessage.textContent = "";  // Clear the error message if it was previously displayed
+        return true;
+    }
+</script>
+</div>
+</body>
+</html>

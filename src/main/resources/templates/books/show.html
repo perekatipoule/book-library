@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/library.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/books.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/frame.css}"/>
+    <title>Show</title>
+</head>
+<body>
+<div class="frame">
+    <p th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()} ">VALUE</p>
+    <br/>
+    <div th:if="${people}">
+        <p>This book is free. To whom should it be assigned? </p>
+        <form th:method="PATCH" th:action="@{/library/books/{id}/appoint(id=${book.getId()})}">
+            <label for="person">Choose a reader:</label>
+            <select th:object="${person}" th:field="*{id}" id="person">
+                <option th:each="person : ${people}" th:value="${person.getId()}" th:text="${person.getFullName()}">
+                </option>
+            </select>
+            <input type="submit" class="button" value="Assign a book" />
+        </form>
+    </div>
+
+    <div th:if="${bookReader}">
+        <p th:text="${'Book was taken by ' + bookReader.getFullName()}">VALUE</p>
+        <form th:method="PATCH" th:action="@{/library/books/{id}/free(id=${book.getId()})}">
+            <input type="submit" class="button" value=" Release book" />
+        </form>
+    </div>
+    <hr/>
+    <form th:method="GET" th:action="@{/library/books/{id}/edit(id=${book.getId()})}">
+        <input type="submit" class="button" value="Edit"/>
+        </form>
+        <br/>
+    <form th:method="DELETE" th:action="@{/library/books/{id}(id=${book.getId()})}">
+        <input type="submit" class="button" value="Delete"/>
+        </form>
+    <hr/>
+    <div class="btn-group">
+        <div class="button">
+            <a th:href="@{/library/people}">All readers</a>
+        </div>
+        <div class="button">
+            <a th:href="@{/library/books}">All books</a>
+        </div>
+        <div class="button">
+            <a th:href="@{/library}">To main page</a>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
+

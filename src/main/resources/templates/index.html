@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/library.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/table-center.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main-page.css}"/>
+    <title>Library</title>
+</head>
+<body>
+<div class="main">
+    <div class="list">
+        <a th:href="@{/library/people}"><b>READERS</b></a>
+    </div>
+    <div class="list">
+        <a th:href="@{/library/books}"><b>BOOKS</b></a>
+    </div>
+</div>
+</body>
+</html>

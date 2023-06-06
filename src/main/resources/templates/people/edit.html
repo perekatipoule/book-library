@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/library.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/people.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/frame.css}"/>
+    <title>Edit</title>
+</head>
+<body>
+<div class="frame">
+    <form th:method="PATCH" th:action="@{/library/people/{id}(id=${person.getId()})}" th:object="${person}">
+        <label for="fullName">Enter full name: </label>
+        <input type="text" th:field="*{fullName}" id="fullName"/>
+        <div style="color:red" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">Name error</div>
+        <br/>
+        <label for="birthYear">Enter birth year: </label>
+        <input type="text" th:field="*{birthYear}" id="birthYear"/>
+        <div style="color:red" th:if="${#fields.hasErrors('birthYear')}" th:errors="*{birthYear}">Name error</div>
+        <br/>
+        <label for="email">Enter Email: </label>
+        <input type="text" th:field="*{email}" id="email"/>
+        <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Name error</div>
+        <br/>
+        <hr/>
+        <input type="submit" class="button" value="Change"/>
+    </form>
+  <hr/>
+  <div class="btn-group">
+    <div class="button">
+      <a th:href="@{/library/people}">All readers</a>
+    </div>
+    <div class="button">
+      <a th:href="@{/library/books}">All books</a>
+    </div>
+    <div class="button">
+      <a th:href="@{/library}">To main page</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
