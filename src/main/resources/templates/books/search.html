@@ -28,6 +28,7 @@
             <div th:each="book : ${searchedBooks}">
                 <a th:href="@{/library/books/{id}(id=${book.id})}"
                    th:text="${book.title + ', ' + book.author + ', ' + book.year}">user</a>
+
                 <div th:if="${book.reader == null}">
                     <p>Book is free</p>
                 </div>
@@ -35,6 +36,7 @@
                 <div th:unless="${book.reader == null}">
                     <p th:text="${'Book was taken by ' + book.reader.fullName}">user</p>
                 </div>
+                <br/>
             </div>
         </div>
     </div>

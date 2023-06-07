@@ -10,11 +10,11 @@ import lombok.Setter;
 @Getter
 public class BookPageForm {
 
-    @Pattern(regexp = "\\d+", message = "Page value should be numerical")
+    @Pattern(regexp = "\\d*|^$", message = "Page value should be numerical")
     private String page;
 
 
-    @Pattern(regexp = "\\d+", message = "Books per page value should be numerical")
+    @Pattern(regexp = "\\d*|^$", message = "Books per page value should be numerical")
     private String booksPerPage;
 
 

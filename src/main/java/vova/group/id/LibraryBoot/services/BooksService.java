@@ -28,10 +28,14 @@ public class BooksService {
         List<Book> books = new ArrayList<>();
 
         Boolean sortByYear = form.getSortByYear();
+
         Integer page = Optional.ofNullable(form.getPage())
+                .filter(pageValue -> !pageValue.isEmpty())
                 .map(Integer::parseInt)
                 .orElse(null);
+
         Integer booksPerPage = Optional.ofNullable(form.getBooksPerPage())
+                .filter(booksValue -> !booksValue.isEmpty())
                 .map(Integer::parseInt)
                 .orElse(null);
 
