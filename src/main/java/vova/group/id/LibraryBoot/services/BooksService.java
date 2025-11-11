@@ -56,8 +56,6 @@ public class BooksService {
         return booksRepository.findByTitleContainingIgnoreCase(titleFragment);
     }
 
-
-
     public Book show(int id) {
         return booksRepository.findById(id).orElse(null);
     }
