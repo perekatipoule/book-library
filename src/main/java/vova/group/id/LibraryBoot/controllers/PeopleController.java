@@ -1,11 +1,13 @@
 package vova.group.id.LibraryBoot.controllers;
 
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import vova.group.id.LibraryBoot.dto.PersonDTO;
 import vova.group.id.LibraryBoot.models.Person;
 import vova.group.id.LibraryBoot.services.PeopleService;
 import vova.group.id.LibraryBoot.util.PersonValidator;
@@ -17,11 +19,13 @@ public class PeopleController {
 
     private final PeopleService peopleService;
     private final PersonValidator personValidator;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public PeopleController(PeopleService peopleService, PersonValidator personValidator) {
+    public PeopleController(PeopleService peopleService, PersonValidator personValidator, ModelMapper modelMapper) {
         this.peopleService = peopleService;
         this.personValidator = personValidator;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping()
@@ -39,41 +43,54 @@ public class PeopleController {
     }
 
     @GetMapping("/new")
-    public String newPerson(@ModelAttribute("person") Person person) {
+    public String newPerson(@ModelAttribute("personDTO") PersonDTO personDTO) {
         return "people/new";
     }
 
     @PostMapping()
-    public String create(@ModelAttribute("person") @Valid Person person,
+    public String create(@ModelAttribute("personDTO") @Valid PersonDTO personDTO,
                          BindingResult bindingResult) {
 
-        personValidator.validate(person, bindingResult);
+        personValidator.validate(personDTO, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return "people/new";
         }
 
-        peopleService.save(person);
+        peopleService.save(convertPersonDTOToPerson(personDTO));
         return "redirect:/library/people";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("person", peopleService.show(id));
+        Person personFromDB = peopleService.show(id);
+        model.addAttribute("personDTO", convertPersonToPersonDTO(personFromDB));
         return "people/edit";
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult, @PathVariable("id") int id) {
+    public String update(@ModelAttribute("personDTO") @Valid PersonDTO personDTO, BindingResult bindingResult, @PathVariable("id") int id) {
 
-        personValidator.validate(person, bindingResult);
+        personValidator.validate(personDTO, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return "people/edit";
         }
 
-        peopleService.update(id, person);
+        peopleService.update(id, convertPersonDTOToPerson(personDTO));
         return "redirect:/library/people/" + id;
+    }
+
+    public Person convertPersonDTOToPerson(PersonDTO personDTO) {
+        Person person = modelMapper.map(personDTO, Person.class);
+        person.setBirthYear(Integer.parseInt(personDTO.getBirthYear()));
+        return person;
+    }
+
+    public PersonDTO convertPersonToPersonDTO(Person person) {
+        PersonDTO personDTO = modelMapper.map(person, PersonDTO.class);
+        personDTO.setBirthYear(String.valueOf(person.getBirthYear()));
+        return personDTO;
     }
 
     @DeleteMapping(("/{id}"))
@@ -81,8 +98,4 @@ public class PeopleController {
         peopleService.delete(id);
         return "redirect:/library/people";
     }
-
-
-
-
 }
