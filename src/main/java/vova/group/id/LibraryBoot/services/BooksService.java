@@ -25,7 +25,7 @@ public class BooksService {
     }
 
     public List<Book> index(BookPageForm form) {
-        List<Book> books = new ArrayList<>();
+        List<Book> books;
 
         Boolean sortByYear = form.getSortByYear();
 
@@ -72,12 +72,12 @@ public class BooksService {
 
     @Transactional
     public void update(int id, Book updatedBook) {
-        Book bookToBeUpdated = booksRepository.findById(id).get();
-
-        updatedBook.setId(id);
-        updatedBook.setReader(bookToBeUpdated.getReader());
-
-        booksRepository.save(updatedBook);
+        Optional<Book> book = booksRepository.findById(id);
+        if (book.isPresent()) {
+            updatedBook.setId(id);
+            updatedBook.setReader(book.get().getReader());
+            booksRepository.save(updatedBook);
+        }
     }
 
     @Transactional

@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import vova.group.id.LibraryBoot.dto.BookDTO;
-import vova.group.id.LibraryBoot.dto.PersonDTO;
 import vova.group.id.LibraryBoot.models.Book;
 import vova.group.id.LibraryBoot.models.BookPageForm;
 import vova.group.id.LibraryBoot.models.Person;

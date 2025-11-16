@@ -1,7 +1,6 @@
 package vova.group.id.LibraryBoot.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -32,7 +31,7 @@ public class Book {
     private String author;
 
     @Min(value = 1400, message = "The year must be more than 1400")
-    @Column(name = "year")
+    @Column(name = "book_year")
     private int year;
 
     @ManyToOne
