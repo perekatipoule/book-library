@@ -32,4 +32,11 @@ public class PersonDTO {
         this.birthYear = birthYear;
         this.email = email;
     }
+
+    public PersonDTO(int id, String fullName, String birthYear, String email) {
+        this.id = id;
+        this.fullName = fullName;
+        this.birthYear = birthYear;
+        this.email = email;
+    }
 }

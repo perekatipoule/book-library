@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-public class BookControllerTest {
+public class BooksControllerTest {
     private MockMvc mockMvc;
 
     @Mock
