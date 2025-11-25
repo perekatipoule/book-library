@@ -48,7 +48,7 @@ public class PersonValidatorTest extends H2databaseInitTest {
     @Test
     public void testPersonWithNotUniqueEmail() {
         // given
-        PersonDTO testPersonDTO = new PersonDTO(4, "Test Name", "1999", "test@ukr.net");
+        PersonDTO testPersonDTO = new PersonDTO(4, "Test Name", "1999", "test3@gmail.com");
         Errors errors = new BeanPropertyBindingResult(testPersonDTO, "person");
         // when
         validator.validate(testPersonDTO, errors);
@@ -74,7 +74,7 @@ public class PersonValidatorTest extends H2databaseInitTest {
     }
 
     @Test
-    public void testPersonWithYearGraterThannow() {
+    public void testPersonWithYearGraterThanNow() {
         // given
         String yearGraterThanNow = String.valueOf(java.time.Year.now().getValue() + 1);
         PersonDTO testPersonDTO = new PersonDTO(4, "Test Name", yearGraterThanNow, "any@ukr.net");
@@ -91,7 +91,7 @@ public class PersonValidatorTest extends H2databaseInitTest {
     @Test
     public void testPersonWithYearAndEmailErrors() {
         // given
-        PersonDTO testPersonDTO = new PersonDTO(4, "Test Name", "1800", "test@ukr.net");
+        PersonDTO testPersonDTO = new PersonDTO(4, "Test Name", "1800", "test3@gmail.com");
         Errors errors = new BeanPropertyBindingResult(testPersonDTO, "person");
         // when
         validator.validate(testPersonDTO, errors);

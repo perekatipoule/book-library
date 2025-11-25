@@ -20,7 +20,7 @@
         <div th:each="book : ${personBooks}">
             <a th:href="@{/library/books/{id}(id=${book.getId()})}"
                th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}"
-               th:style="${book.isExpired()} ? 'color: red' : 'color: blue'">user</a>
+               th:style="${book.getExpired()} ? 'color: red' : 'color: blue'">user</a>
         </div>
     </div>
     <br>

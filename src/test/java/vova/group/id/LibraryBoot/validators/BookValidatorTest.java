@@ -7,7 +7,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import vova.group.id.LibraryBoot.dto.BookDTO;
-import vova.group.id.LibraryBoot.dto.PersonDTO;
 import vova.group.id.LibraryBoot.util.BookValidator;
 import vova.group.id.LibraryBoot.utils.H2databaseInitTest;
 
