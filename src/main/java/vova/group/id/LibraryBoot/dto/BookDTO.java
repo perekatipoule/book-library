@@ -22,4 +22,13 @@ public class BookDTO {
     @NotEmpty(message = "Year cannot be empty")
     @Pattern(regexp = "\\d{4}", message = "Enter a valid 4-digit year")
     private String year;
+
+    public BookDTO() {
+    }
+
+    public BookDTO(String title, String author, String year) {
+        this.title = title;
+        this.author = author;
+        this.year = year;
+    }
 }
