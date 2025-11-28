@@ -10,19 +10,17 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 import vova.group.id.LibraryBoot.dto.BookDTO;
-import vova.group.id.LibraryBoot.dto.PersonDTO;
 import vova.group.id.LibraryBoot.models.Book;
 import vova.group.id.LibraryBoot.models.BookPageForm;
 import vova.group.id.LibraryBoot.models.Person;
 import vova.group.id.LibraryBoot.services.BooksService;
+import vova.group.id.LibraryBoot.services.PeopleService;
 import vova.group.id.LibraryBoot.utils.H2databaseInitTest;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -35,6 +33,9 @@ public class FromEndToEndBooksTest extends H2databaseInitTest {
 
     @Autowired
     private BooksService booksService;
+
+    @Autowired
+    private PeopleService peopleService;
 
     @Autowired
     public FromEndToEndBooksTest(WebApplicationContext webApplicationContext) {
@@ -249,5 +250,127 @@ public class FromEndToEndBooksTest extends H2databaseInitTest {
         assertEquals(3, receivedBooksAfterCreate.size());
         assertEquals("Valid Book", receivedBooksAfterCreate.get(2).getTitle());
         assertEquals("Test Author", receivedBooksAfterCreate.get(2).getAuthor());
+    }
+
+    @Test
+    public void testEdit() throws Exception {
+        mvcResult = mockMvc.perform(get("/library/books/{id}/edit", 1))
+                .andExpectAll(
+                        model().size(1),
+                        model().attributeExists("bookDTO"),
+                        status().isOk())
+                .andReturn();
+
+        modelAndView = mvcResult.getModelAndView();
+        assertNotNull(modelAndView);
+        assertEquals("books/edit", modelAndView.getViewName());
+
+        BookDTO receivedBookDTO = (BookDTO) modelAndView.getModel().get("bookDTO");
+        assertNotNull(receivedBookDTO);
+        assertEquals("Test Title1", receivedBookDTO.getTitle());
+        assertEquals("1946", receivedBookDTO.getYear());
+        assertEquals("Ivan Bagryany", receivedBookDTO.getAuthor());
+    }
+
+    @Test
+    public void testUpdateWithSameData() throws Exception {
+       mockMvc.perform(patch("/library/books/{id}", 1)
+                       .flashAttr("bookDTO", new BookDTO("Test Title1", "Ivan Bagryany", "1946")))
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
+
+        Book firstBookFromDB = booksService.show(1);
+        assertNotNull(firstBookFromDB);
+        assertEquals("Test Title1", firstBookFromDB.getTitle());
+        assertEquals(1946, firstBookFromDB.getYear());
+        assertEquals("Ivan Bagryany", firstBookFromDB.getAuthor());
+    }
+
+    @Test
+    public void testUpdateWithValidData() throws Exception {
+        mockMvc.perform(patch("/library/books/{id}", 1)
+                        .flashAttr("bookDTO", new BookDTO("Updated Title", "Updated Author", "1900")))
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
+
+        Book firstBookFromDB = booksService.show(1);
+        assertNotNull(firstBookFromDB);
+        assertEquals("Updated Title", firstBookFromDB.getTitle());
+        assertEquals(1900, firstBookFromDB.getYear());
+        assertEquals("Updated Author", firstBookFromDB.getAuthor());
+    }
+
+    @Test
+    public void testUpdateWithNotValidData() throws Exception {
+       mvcResult =  mockMvc.perform(patch("/library/books/{id}", 1)
+                        .flashAttr("bookDTO", new BookDTO("Updated Title", "Updated Author", "1300")))
+                .andExpectAll(
+                        model().size(1),
+                        model().attributeExists("bookDTO"),
+                        status().isOk())
+                .andReturn();
+
+        modelAndView = mvcResult.getModelAndView();
+        assertNotNull(modelAndView);
+        assertEquals("books/edit", modelAndView.getViewName());
+
+        Book firstBookFromDB = booksService.show(1);
+        assertNotNull(firstBookFromDB);
+        assertEquals("Test Title1", firstBookFromDB.getTitle());
+        assertEquals(1946, firstBookFromDB.getYear());
+        assertEquals("Ivan Bagryany", firstBookFromDB.getAuthor());
+    }
+
+    @Test
+    public void testAppointPerson() throws Exception {
+        Book bookForAdding = booksService.show(1);
+        assertNull(bookForAdding.getReader());
+        assertNull(bookForAdding.getTakenAt());
+
+        Person personToAppoint = peopleService.show(2);
+
+        mockMvc.perform(patch("/library/books/{id}/appoint", bookForAdding.getId())
+                        .flashAttr("person", personToAppoint))
+                .andExpectAll(
+                        status().is3xxRedirection(),
+                        redirectedUrl("/library/books/" + bookForAdding.getId()));
+
+        bookForAdding = booksService.show(1);
+        assertNotNull(bookForAdding.getReader());
+        assertNotNull(bookForAdding.getTakenAt());
+    }
+
+    @Test
+    public void testFree() throws Exception {
+        Book bookWithReader = booksService.show(2);
+        assertNotNull(bookWithReader.getReader());
+        assertNotNull(bookWithReader.getTakenAt());
+
+
+        mockMvc.perform(patch("/library/books/{id}/free", bookWithReader.getId()))
+                .andExpectAll(
+                        status().is3xxRedirection(),
+                        redirectedUrl("/library/books/" + bookWithReader.getId()));
+
+        Book bookWithoutReader = booksService.show(2);
+        assertNull(bookWithoutReader.getReader());
+        assertNull(bookWithoutReader.getTakenAt());
+    }
+
+    @Test
+    public void testDelete() throws Exception {
+        List<Book> booksBeforeDelete = booksService.index(new BookPageForm());
+        assertEquals(2, booksBeforeDelete.size());
+
+        mockMvc.perform(delete("/library/books/{id}", 2))
+                .andExpectAll(
+                        status().is3xxRedirection(),
+                        redirectedUrl("/library/books")
+                );
+
+        Book delatedBook = booksService.show(2);
+        assertNull(delatedBook);
+        List<Book> booksAfterDelete = booksService.index(new BookPageForm());
+        assertEquals(1, booksAfterDelete.size());
     }
 }
