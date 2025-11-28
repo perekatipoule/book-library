@@ -113,18 +113,17 @@ public class BooksController {
         return "redirect:/library/books/" + id;
     }
 
-    @PatchMapping ("/{id}/appoint")
+    @PatchMapping("/{id}/appoint")
     public String appointPerson(@ModelAttribute("person") Person person, @PathVariable("id") int bookId) {
         booksService.appointPerson(person, bookId);
         return "redirect:/library/books/" + bookId;
     }
 
-    @PatchMapping ("/{id}/free")
+    @PatchMapping("/{id}/free")
     public String free(@PathVariable("id") int id) {
         booksService.free(id);
         return "redirect:/library/books/" + id;
     }
-
 
     @DeleteMapping(("/{id}"))
     public String delate(@PathVariable("id") int id) {
